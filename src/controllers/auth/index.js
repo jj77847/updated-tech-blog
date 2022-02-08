@@ -1,99 +1,81 @@
-const { getPayloadWithValidFieldsOnly } = require('../../helpers');
-const { User } = require('../../models');
+const bcrypt = require("bcrypt");
+
+const { User } = require("../../models");
+const { getPayloadWithValidFieldsOnly } = require("../../util");
 
 const login = async (req, res) => {
   try {
     const payload = getPayloadWithValidFieldsOnly(
-      ['email', 'password'],
+      ["email", "password"],
       req.body
     );
 
     if (Object.keys(payload).length !== 2) {
-      return res.status(400).json({
-        success: false,
-        error: 'Please provide valid fields in post body',
-      });
+      console.log(`[ERROR]: Failed to login user | Invalid fields`);
+      return res.status(400).json({ success: false });
     }
 
     const user = await User.findOne({ where: { email: payload.email } });
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: 'User does not exist',
-      });
+      console.log(`[ERROR]: Failed to login user | User does not exist`);
+      return res.status(404).json({ success: false });
     }
 
-    const validPassword = await user.checkPassword(payload.password);
+    const isValidPassword = await bcrypt.compare(
+      payload.password,
+      user.password
+    );
 
-    if (!validPassword) {
-      return res.status(401).json({
-        success: false,
-        error: 'User not authorized',
-      });
+    if (!isValidPassword) {
+      console.log(`[ERROR]: Failed to login user | Invalid password`);
+      return res.status(401).json({ success: false });
     }
-
-    const userInSession = {
-      id: user.get('id'),
-      email: user.get('email'),
-      firstName: user.get('first_name'),
-      lastName: user.get('last_name'),
-    };
 
     req.session.save(() => {
-      req.session.loggedIn = true;
-      req.session.user = userInSession;
+      req.session.isLoggedIn = true;
+      req.session.user = {
+        id: user.get("id"),
+        username: user.get("username"),
+      };
 
-      return res.json({ success: true, data: 'Login successful' });
+      return res.json({ success: true });
     });
   } catch (error) {
-    console.log(`[ERROR]: Login user failed | ${error.message}`);
-    return res
-      .status(500)
-      .json({ success: false, error: 'Failed to login user' });
+    console.log(`[ERROR]: Failed to create user | ${error.message}`);
+    return res.status(500).json({ success: false });
   }
 };
 
 const signup = async (req, res) => {
   try {
     const payload = getPayloadWithValidFieldsOnly(
-      ['username', 'email', 'password', 'first_name', 'last_name'],
+      ["username", "email", "password"],
       req.body
     );
 
-    if (Object.keys(payload).length !== 5) {
-      return res.status(400).json({
-        success: false,
-        error: 'Please provide valid fields in post body',
-      });
+    if (Object.keys(payload).length !== 3) {
+      console.log(`[ERROR]: Failed to create user | Invalid fields`);
+      return res.status(400).json({ success: false });
     }
 
     await User.create(payload);
 
-    return res.json({ success: true, data: 'Successfully created a user' });
+    return res.json({ success: true });
   } catch (error) {
-    console.log(`[ERROR]: Create user failed | ${error.message}`);
-    return res
-      .status(500)
-      .json({ success: false, error: 'Failed to create user' });
+    console.log(`[ERROR]: Failed to create user | ${error.message}`);
+    return res.status(500).json({ success: false });
   }
 };
 
 const logout = (req, res) => {
-  if (req.session.loggedIn) {
+  if (req.session.isLoggedIn) {
     req.session.destroy(() => {
-      return res.json({ success: true, data: 'Successfully logged out' });
+      return res.json({ success: true });
     });
   } else {
-    return res.status(404).json({
-      success: false,
-      error: 'Cannot logout when you are not logged in',
-    });
+    return res.status(404).json({ success: false });
   }
 };
 
-module.exports = {
-  login,
-  logout,
-  signup,
-};
+module.exports = { login, logout, signup };

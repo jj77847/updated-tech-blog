@@ -1,57 +1,51 @@
-const bcrypt = require('bcrypt');
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes } = require("sequelize");
 
-const connection = require('../../config/connection');
-const hashPassword = require('../../hooks/hashPassword');
+const sequelize = require("../config/connection");
+const hashPassword = require("../hooks/hashPassword");
+
+class User extends Model {}
 
 const schema = {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   username: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      isAlphanumeric: true,
+    },
     unique: true,
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
     validate: {
       isEmail: true,
     },
+    unique: true,
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
-      len: [8, 20],
+      len: [8],
     },
-  },
-  first_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  last_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
   },
 };
 
 const options = {
-  sequelize: connection,
-  timestamps: true,
-  freezeTableNames: true,
-  underscored: true,
-  modelName: 'user',
   hooks: {
     beforeCreate: hashPassword,
   },
+  sequelize,
+  timestamps: true,
+  freezeTableName: true,
+  underscored: true,
+  modelName: "user",
 };
-
-class User extends Model {
-  async checkPassword(userPassword) {
-    const isValid = await bcrypt.compare(userPassword, this.password);
-    return isValid;
-  }
-}
 
 User.init(schema, options);
 

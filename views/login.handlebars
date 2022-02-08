@@ -1,20 +1,22 @@
-<header>
+<main>
   {{> public-navbar}}
-</header>
-<main class='container'>
-  <div class="mx-auto my-4">
-    <h1 class="text-center">Login Form</h1>
-    <hr />
-    <form id='login-form' class="p-4">
-      <div class='mb-3'>
-        <label for='email-input' class='form-label'>Email address</label>
-        <input type='email' class='form-control' id='email-input' />
+
+  <section class="container mt-4 responsive-form">
+    <h2 class="text-center">Login</h2>
+
+    <form id="login-form">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="email">
       </div>
-      <div class='mb-3'>
-        <label for='password-input' class='form-label'>Password</label>
-        <input type='password' class='form-control' id='password-input' />
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password">
       </div>
-      <button type='submit' class='btn btn-primary'>Login</button>
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+      <div class="mb-3 text-center" id="error-message"></div>
     </form>
-  </div>
+  </section>
 </main>

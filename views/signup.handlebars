@@ -1,36 +1,32 @@
-<header>
+<main>
   {{> public-navbar}}
-</header>
-<main class='container'>
-  <div class="mx-auto my-4">
-    <h1 class="text-center">Sign Up Form</h1>
-    <hr />
-    <form id='signup-form' class="p-4">
-      <div class='mb-3'>
-        <label for='username-input' class='form-label'>Username</label>
-        <input type='text' class='form-control' id='username-input' />
+
+  <section class="container mt-4 responsive-form">
+    <h2 class="text-center">Sign Up</h2>
+
+    <form id="sign-up-form">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username">
       </div>
-      <div class='mb-3'>
-        <label for='email-input' class='form-label'>Email address</label>
-        <input type='email' class='form-control' id='email-input' />
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="email">
       </div>
-      <div class='mb-3'>
-        <label for='password-input' class='form-label'>Password</label>
-        <input type='password' class='form-control' id='password-input' />
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password">
       </div>
-      <div class='mb-3'>
-        <label for='confirm-password-input' class='form-label'>Confirm Password</label>
-        <input type='password' class='form-control' id='confirm-password-input' />
+      <div class="mb-3">
+        <label for="confirm-password" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="confirm-password">
       </div>
-      <div class='mb-3'>
-        <label for='first-name' class='form-label'>First Name</label>
-        <input type='text' class='form-control' id='first-name' />
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary">Create Account</button>
       </div>
-      <div class='mb-3'>
-        <label for='last-name' class='form-label'>Last Name</label>
-        <input type='text' class='form-control' id='last-name' />
+      <div class="mb-3 text-center">
+        <div id="error-message" class="form-text text-danger"></div>
       </div>
-      <button type='submit' class='btn btn-primary'>Create Account</button>
     </form>
-  </div>
+  </section>
 </main>
