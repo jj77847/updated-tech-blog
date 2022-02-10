@@ -13,8 +13,8 @@ const options = {
   logging: false,
 };
 
-const connection = process.env.JAWSDB_URL
-  ? new Sequelize(process.env.JAWSDB_URL)
+const connection = process.env.updated_tech_blog_DB_URL
+  ? new Sequelize(process.env.updated_tech_blog_DB_URL_URL)
   : new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, options);
 
 module.exports = connection;
